@@ -1,0 +1,43 @@
+enable
+configure terminal
+hostname MyRouter
+
+enable secret MyEnablePassword
+
+line console 0
+password MyConsolePassword
+login
+exit
+
+line vty 0 4
+password MyVTYPassword
+login
+exit
+
+
+banner motd #Unauthorized access is prohibited#
+
+
+interface gigabitEthernet 0/0/0
+description Link to ISP
+ip address 192.168.1.1 255.255.255.0
+no shutdown
+exit
+
+interface gigabitEthernet 0/0/1
+description Internal Network
+ip address 192.168.2.1 255.255.255.0
+no shutdown
+exit
+
+ip domain-name example.com
+crypto key generate rsa modulus 2048
+ip ssh version 2
+username admin privilege 15 secret MyAdminPassword
+line vty 0 4
+transport input ssh
+login local
+exit
+
+
+copy running-config startup-config

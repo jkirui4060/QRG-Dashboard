@@ -1,0 +1,52 @@
+enable
+configure terminal
+
+enable secret MyEnablePassword
+
+line console 0
+password MyConsolePassword
+login
+exit
+
+line vty 0 4
+password MyVTYPassword
+login
+exit
+
+
+banner motd #Unauthorized access is prohibited#
+
+
+vlan 10
+name Sales
+exit
+vlan 20
+name Engineering
+exit
+
+interface gigabitEthernet 0/0/0
+switchport mode access
+switchport access vlan 10
+exit
+
+interface gigabitEthernet 0/0/1
+switchport mode access
+switchport access vlan 20
+exit
+
+interface gigabitEthernet 0/0/2
+switchport mode trunk
+switchport trunk allowed vlan 10,20
+exit
+
+interface gigabitEthernet 0/1/0.10
+encapsulation dot1Q 10
+ip address 192.168.10.1 255.255.255.0
+exit
+
+interface gigabitEthernet 0/1/0.20
+encapsulation dot1Q 20
+ip address 192.168.20.1 255.255.255.0
+exit
+
+copy running-config startup-config

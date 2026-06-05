@@ -1,0 +1,60 @@
+enable
+configure terminal
+hostname MyRouter
+
+! Set enable secret
+enable secret MyEnablePassword
+
+! Configure console access
+line console 0
+password MyConsolePassword
+login
+exit
+
+! Configure VTY access
+line vty 0 4
+password MyVTYPassword
+login
+exit
+
+! Configure a banner
+banner motd #Unauthorized access is prohibited#
+
+! Create VLANs
+vlan 10
+name Sales
+exit
+vlan 20
+name Engineering
+exit
+
+! Configure access ports
+interface gigabitEthernet 0/0/0
+switchport mode access
+switchport access vlan 10
+exit
+
+interface gigabitEthernet 0/0/1
+switchport mode access
+switchport access vlan 20
+exit
+
+! Configure trunk port if needed
+interface gigabitEthernet 0/0/2
+switchport mode trunk
+switchport trunk allowed vlan 10,20
+exit
+
+! Configure subinterfaces for inter-VLAN routing
+interface gigabitEthernet 0/1/0.10
+encapsulation dot1Q 10
+ip address 192.168.10.1 255.255.255.0
+exit
+
+interface gigabitEthernet 0/1/0.20
+encapsulation dot1Q 20
+ip address 192.168.20.1 255.255.255.0
+exit
+
+! Save configuration
+copy running-config startup-config

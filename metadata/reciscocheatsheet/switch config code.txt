@@ -1,0 +1,58 @@
+enable
+configure terminal
+hostname MySwitch
+
+! Set enable secret
+enable secret MyEnablePassword
+
+! Configure console access
+line console 0
+password MyConsolePassword
+login
+exit
+
+! Configure VTY access
+line vty 0 15
+password MyVTYPassword
+login
+exit
+
+! Configure a banner
+banner motd #Unauthorized access is prohibited#
+
+! Create VLANs
+vlan 10
+name Sales
+exit
+vlan 20
+name Engineering
+exit
+
+! Configure trunk ports
+interface gigabitEthernet 0/1
+switchport mode trunk
+switchport trunk allowed vlan 10,20
+exit
+
+! Configure access ports
+interface fastEthernet 0/1
+switchport mode access
+switchport access vlan 10
+exit
+
+interface fastEthernet 0/2
+switchport mode access
+switchport access vlan 20
+exit
+
+! Configure management interface
+interface vlan 1
+ip address 192.168.1.2 255.255.255.0
+no shutdown
+exit
+
+! Set default gateway
+ip default-gateway 192.168.1.1
+
+! Save configuration
+copy running-config startup-config

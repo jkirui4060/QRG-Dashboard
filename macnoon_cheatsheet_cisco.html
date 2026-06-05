@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cisco Networking | Macnoon Cheatsheet</title>
+  <style>
+    /* ── Reset & Base ── */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0e1117;
+      color: #e6edf3;
+      line-height: 1.6;
+    }
+
+    a {
+      color: #58a6ff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* ── Layout ── */
+    .cs-wrapper {
+      display: flex;
+      min-height: 100vh;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ── Sidebar ── */
+    .cs-sidebar {
+      width: 260px;
+      min-width: 260px;
+      background: #0d1117;
+      border-right: 1px solid #21262d;
+      padding: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cs-sidebar-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid #21262d;
+    }
+
+    .cs-sidebar-header .cs-logo {
+      font-family: monospace;
+      font-size: 0.72rem;
+      color: #81ff7f;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.75rem;
+    }
+
+    .cs-search {
+      width: 100%;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.8rem;
+      color: #e6edf3;
+      font-family: monospace;
+      outline: none;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    }
+
+    .cs-search::placeholder {
+      color: #4b5563;
+    }
+
+    .cs-search:focus {
+      border-color: #58a6ff;
+    }
+
+    .cs-nav-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.75rem 0;
+    }
+
+    .cs-nav-group {
+      margin-bottom: 0.25rem;
+    }
+
+    .cs-nav-group-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.55rem 1.25rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #58a6ff;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+
+    .cs-nav-group-label:hover {
+      background: #161b22;
+    }
+
+    .cs-nav-group-label .chevron {
+      font-size: 0.6rem;
+      transition: transform 0.2s;
+      color: #8b949e;
+    }
+
+    .cs-nav-group-label.open .chevron {
+      transform: rotate(90deg);
+    }
+
+    .cs-nav-items {
+      display: none;
+      padding-bottom: 0.25rem;
+    }
+
+    .cs-nav-items.open {
+      display: block;
+    }
+
+    .cs-nav-item {
+      display: block;
+      padding: 0.45rem 1.25rem 0.45rem 2rem;
+      font-size: 0.82rem;
+      color: #8b949e;
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+
+    .cs-nav-item:hover {
+      color: #e6edf3;
+      background: #161b22;
+      text-decoration: none;
+    }
+
+    .cs-nav-item.active {
+      color: #81ff7f;
+      border-left-color: #81ff7f;
+      background: #0f2d18;
+    }
+
+    .cs-nav-item.coming-soon {
+      color: #4b5563;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .cs-nav-item.coming-soon::after {
+      content: " ·soon";
+      font-size: 0.65rem;
+      color: #4b5563;
+    }
+
+    /* ── Main Content ── */
+    .cs-main {
+      flex: 1;
+      padding: 2.5rem 2rem;
+      overflow-y: auto;
+    }
+
+    /* ── Page Header ── */
+    .cs-page-header {
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #21262d;
+    }
+
+    .cs-page-header .breadcrumb {
+      font-family: monospace;
+      font-size: 0.72rem;
+      color: #4b5563;
+      margin-bottom: 0.5rem;
+    }
+
+    .cs-page-header h1 {
+      font-size: 1.8rem;
+      color: #e6edf3;
+      margin-bottom: 0.35rem;
+    }
+
+    .cs-page-header p {
+      color: #8b949e;
+      font-size: 0.88rem;
+      margin: 0;
+    }
+
+    /* ── Device Toggle ── */
+    .cs-device-toggle {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      align-items: center;
+    }
+
+    .cs-device-toggle label {
+      font-size: 0.82rem;
+      color: #8b949e;
+      margin-right: 0.5rem;
+    }
+
+    .cs-device-btn {
+      padding: 0.5rem 1rem;
+      background: #161b22;
+      border: 1px solid #30363d;
+      color: #8b949e;
+      font-size: 0.82rem;
+      font-family: monospace;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .cs-device-btn:hover {
+      background: #21262d;
+      color: #e6edf3;
+    }
+
+    .cs-device-btn.active {
+      background: #0f2d18;
+      color: #81ff7f;
+      border-color: #81ff7f;
+    }
+
+    /* ── Category Dropdown ── */
+    .cs-category-dropdown {
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .cs-dropdown-btn {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: #161b22;
+      border: 1px solid #30363d;
+      color: #e6edf3;
+      font-size: 0.82rem;
+      font-family: monospace;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.2s;
+    }
+
+    .cs-dropdown-btn:hover {
+      border-color: #58a6ff;
+    }
+
+    .cs-dropdown-content {
+      display: none;
+      position: absolute;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      width: 100%;
+      top: 100%;
+      left: 0;
+      z-index: 100;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-top: 0.5rem;
+    }
+
+    .cs-dropdown-content.open {
+      display: block;
+    }
+
+    .cs-dropdown-item {
+      padding: 0.75rem 1rem;
+      color: #8b949e;
+      cursor: pointer;
+      border-bottom: 1px solid #21262d;
+      transition: all 0.2s;
+    }
+
+    .cs-dropdown-item:hover {
+      background: #161b22;
+      color: #81ff7f;
+    }
+
+    .cs-dropdown-item:last-child {
+      border-bottom: none;
+    }
+
+    /* ── Section ── */
+    .cs-ref-section {
+      margin-bottom: 2rem;
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .cs-ref-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1.25rem;
+      background: #161b22;
+      border-bottom: 1px solid #21262d;
+    }
+
+    .cs-ref-section-header h2 {
+      font-size: 0.9rem;
+      color: #79c0ff;
+      margin: 0;
+      letter-spacing: 0.5px;
+    }
+
+    .cs-ref-section-header .section-tag {
+      font-size: 0.65rem;
+      font-family: monospace;
+      color: #4b5563;
+      background: #0d1117;
+      border: 1px solid #21262d;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    .cs-ref-section-body {
+      padding: 1.25rem;
+    }
+
+    .cs-ref-section-body p {
+      font-size: 0.82rem;
+      color: #8b949e;
+      margin: 0 0 0.85rem;
+      line-height: 1.5;
+    }
+
+    .cs-ref-section-body p:last-of-type {
+      margin-bottom: 0.85rem;
+    }
+
+    .cs-code-variant-label {
+      font-size: 0.75rem;
+      font-family: monospace;
+      color: #58a6ff;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ── Code block ── */
+    .cs-code-block {
+      position: relative;
+      background: #010409;
+      border: 1px solid #21262d;
+      border-radius: 8px;
+      margin: 0.75rem 0 1.5rem 0;
+      overflow: hidden;
+    }
+
+    .cs-code-block pre {
+      margin: 0;
+      padding: 1rem 1rem 1rem 1.25rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      color: #81ff7f;
+      line-height: 1.8;
+      overflow-x: auto;
+      padding-right: 4.5rem;
+    }
+
+    .cs-copy-btn {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      background: #1f2937;
+      border: 1px solid #30363d;
+      color: #8b949e;
+      font-size: 0.7rem;
+      font-family: monospace;
+      padding: 3px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .cs-copy-btn:hover {
+      background: #30363d;
+      color: #e6edf3;
+    }
+
+    .cs-copy-btn.copied {
+      background: #0f2d18;
+      color: #81ff7f;
+      border-color: #81ff7f;
+    }
+
+    .cs-hidden {
+      display: none;
+    }
+
+    /* ── Matrix Canvas ── */
+    #matrix-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 1.5rem 0;
+      background-color: #161b22;
+      color: #8b949e;
+      font-size: 0.9rem;
+      border-top: 1px solid #30363d;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+<canvas id="matrix-canvas"></canvas>
+
+<div class="cs-wrapper">
+
+  <!-- SIDEBAR -->
+  <aside class="cs-sidebar">
+    <div class="cs-sidebar-header">
+      <span class="cs-logo">macnoon188://</span>
+      <input class="cs-search" id="cs-search" type="text" placeholder="search..." oninput="filterSections()" />
+    </div>
+
+    <div class="cs-nav-container">
+      <div class="cs-nav-group">
+        <a href="cheatsheet.html" class="cs-nav-item">🏠 &nbsp;Overview</a>
+      </div>
+
+      <div class="cs-nav-group">
+        <div class="cs-nav-group-label" onclick="toggleGroup(this)">
+          🪟 Windows <span class="chevron">▶</span>
+        </div>
+        <div class="cs-nav-items">
+          <a href="#" class="cs-nav-item coming-soon">Troubleshooting</a>
+          <a href="#" class="cs-nav-item coming-soon">Active Directory</a>
+          <a href="#" class="cs-nav-item coming-soon">PowerShell</a>
+          <a href="#" class="cs-nav-item coming-soon">Event Log IDs</a>
+        </div>
+      </div>
+
+      <div class="cs-nav-group">
+        <div class="cs-nav-group-label open" onclick="toggleGroup(this)">
+          🌐 Networking <span class="chevron">▶</span>
+        </div>
+        <div class="cs-nav-items open">
+          <a href="cheatsheet-cisco.html" class="cs-nav-item active">Cisco IOS</a>
+          <a href="#" class="cs-nav-item coming-soon">pfSense</a>
+          <a href="#" class="cs-nav-item coming-soon">VLANs &amp; Subnetting</a>
+          <a href="#" class="cs-nav-item coming-soon">DNS &amp; DHCP</a>
+        </div>
+      </div>
+
+      <div class="cs-nav-group">
+        <div class="cs-nav-group-label" onclick="toggleGroup(this)">
+          🐧 Linux <span class="chevron">▶</span>
+        </div>
+        <div class="cs-nav-items">
+          <a href="#" class="cs-nav-item coming-soon">Common Commands</a>
+          <a href="#" class="cs-nav-item coming-soon">Bash Scripting</a>
+          <a href="#" class="cs-nav-item coming-soon">Permissions &amp; Users</a>
+          <a href="#" class="cs-nav-item coming-soon">Systemd &amp; Services</a>
+        </div>
+      </div>
+
+      <div class="cs-nav-group">
+        <div class="cs-nav-group-label" onclick="toggleGroup(this)">
+          🛡️ Security <span class="chevron">▶</span>
+        </div>
+        <div class="cs-nav-items">
+          <a href="#" class="cs-nav-item coming-soon">Wazuh Rules</a>
+          <a href="#" class="cs-nav-item coming-soon">Incident Response</a>
+          <a href="#" class="cs-nav-item coming-soon">CVE Triage</a>
+          <a href="#" class="cs-nav-item coming-soon">Kali Tools</a>
+        </div>
+      </div>
+
+      <div class="cs-nav-group">
+        <div class="cs-nav-group-label" onclick="toggleGroup(this)">
+          ☁️ Cloud &amp; Dev <span class="chevron">▶</span>
+        </div>
+        <div class="cs-nav-items">
+          <a href="#" class="cs-nav-item coming-soon">Docker</a>
+          <a href="#" class="cs-nav-item coming-soon">Git &amp; GitHub</a>
+          <a href="#" class="cs-nav-item coming-soon">AWS Basics</a>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="cs-main">
+
+    <div class="cs-page-header">
+      <p class="breadcrumb">macnoon188://cheatsheet / networking / cisco-ios</p>
+      <h1>🌐 Cisco IOS Reference</h1>
+      <p>Router and switch commands — device setup, interfaces, routing protocols, VLANs, and security hardening.</p>
+    </div>
+
+    <!-- Device Toggle -->
+    <div class="cs-device-toggle">
+      <label>Device Type:</label>
+      <button class="cs-device-btn active" onclick="switchDevice('router')">Router</button>
+      <button class="cs-device-btn" onclick="switchDevice('switch')">Switch</button>
+    </div>
+
+    <!-- Category Dropdown -->
+    <div class="cs-category-dropdown">
+      <button class="cs-dropdown-btn" onclick="toggleDropdown()">📑 Jump to Category ▼</button>
+      <div class="cs-dropdown-content" id="dropdownContent">
+        <div class="cs-dropdown-item" onclick="jumpToSection('setup')">Basic Device Setup &amp; Security</div>
+        <div class="cs-dropdown-item" onclick="jumpToSection('interfaces')">Interface Configuration</div>
+        <div class="cs-dropdown-item" onclick="jumpToSection('static-routes')">Static Routes</div>
+        <div class="cs-dropdown-item" onclick="jumpToSection('ripv2')">RIP v2 Configuration</div>
+        <div class="cs-dropdown-item" onclick="jumpToSection('ospf')">OSPF Configuration</div>
+        <div class="cs-dropdown-item" onclick="jumpToSection('vlan')">VLAN Configuration &amp; Trunking</div>
+        <div class="cs-dropdown-item" onclick="jumpToSection('intervlan')">Inter-VLAN Routing</div>
+        <div class="cs-dropdown-item" onclick="jumpToSection('ssh')">SSH &amp; Management Security</div>
+        <div class="cs-dropdown-item" onclick="jumpToSection('management')">Device Management</div>
+      </div>
+    </div>
+
+    <!-- 1. Basic Device Setup & Security -->
+    <div class="cs-ref-section" data-section id="setup">
+      <div class="cs-ref-section-header">
+        <h2>Basic Device Setup &amp; Security</h2>
+        <span class="section-tag">device setup</span>
+      </div>
+      <div class="cs-ref-section-body">
+        <p>Configure hostname, enable secret, console/VTY access, banners, and initial security settings.</p>
+        
+        <div class="cs-code-variant-label">➤ Router Configuration</div>
+        <div class="cs-code-block device-router">
+          <button class="cs-copy-btn" onclick="copyBlock(this)">copy</button>
+          <pre>enable
+configure terminal
+hostname MyRouter
+
+! Set enable secret (privileged mode password)
+enable secret MyEnablePassword
+
+! Configure console access
+line console 0
+password MyConsolePassword
+login
+exit
+
+! Configure VTY access (telnet/SSH)
+line vty 0 4
+password MyVTYPassword
+login
+exit
+
+! Configure a banner (message of the day)
+banner motd #Unauthorized access is prohibited#
+
+! Enable password encryption for viewing
+service password-encryption</pre>
+        </div>
+
+        <div class="cs-code-variant-label">➤ Switch Configuration</div>
+        <div class="cs-code-block device-switch cs-hidden">
+          <button class="cs-copy-btn" onclick="copyBlock(this)">copy</button>
+          <pre>enable
+configure terminal
+hostname MySwitch
+
+! Set enable secret (privileged mode password)
+enable secret MyEnablePassword
+
+! Configure console access
+line console 0
+password MyConsolePassword
+login
+exit
+
+! Configure VTY access (telnet/SSH)
+line vty 0 15
+password MyVTYPassword
+login
+exit
+
+! Configure a banner (message of the day)
+banner motd #Unauthorized access is prohibited#
+
+! Enable password encryption for viewing
+service password-encryption</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Interface Configuration -->
+    <div class="cs-ref-section" data-section id="interfaces">
+      <div class="cs-ref-section-header">
+        <h2>Interface Configuration</h2>
+        <span class="section-tag">interfaces</span>
+      </div>
+      <div class="cs-ref-section-body">
+        <p>Assign IP addresses, configure interface descriptions, enable interfaces, and set up loopback/management interfaces.</p>
+        
+        <div class="cs-code-variant-label">➤ Router Configuration</div>
+        <div class="cs-code-block device-router">
+          <button class="cs-copy-btn" onclick="copyBlock(this)">copy</button>
+          <pre>! Configure physical interfaces
+interface gigabitEthernet 0/0/0
+description Link to ISP
+ip address 192.168.1.1 255.255.255.0
+no shutdown
+exit
+
+interface gigabitEthernet 0/0/1
+description Internal Network
+ip address 192.168.2.1 255.255.255.0
+no shutdown
+exit
+
+! Configure loopback interface (management/routing)
+interface loopback 0
+ip address 192.168.100.1 255.255.255.255
+exit</pre>
+        </div>
+
+        <div class="cs-code-variant-label">➤ Switch Configuration</div>
+        <div class="cs-code-block device-switch cs-hidden">
+          <button class="cs-copy-btn" onclick="copyBlock(this)">copy</button>
+          <pre>! Configure management VLAN interface
+interface vlan 1
+ip address 192.168.1.2 255.255.255.0
+no shutdown
+exit
+
+! Configure physical interfaces (data ports)
+interface gigabitEthernet 0/0/0
+description Access Port - Sales
+switchport mode access
+switchport access vlan 10
+no shutdown
+exit
+
+interface gigabitEthernet 0/0/1
+description Access Port - Engineering
+switchport mode access
+switchport access vlan 20
+no shutdown
+exit</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Static Routes -->
+    <div class="cs-ref-section" data-section id="static-routes">
+      <div class="cs-ref-section-header">
+        <h2>Static Routes</h2>
+        <span class="section-tag">routing</span>
+      </div>
+      <div class="cs-ref-section-body">
+        <p>Define static routes for specific networks and default routes. Default route (0.0.0.0/0) points to ISP gateway.</p>
+        
+        <div class="cs-code-variant-label">➤ Router Configuration</div>
+        <div class="cs-code-block device-router">
+          <button class="cs-copy-btn" onclick="copyBlock(this)">copy</button>
+          <pre>! Static route to specific network
+ip route 10.1.2.0 255.255.255.0 10.1.128.1
+
+! Static route via serial interface
+ip route 10.1.2.0 255.255.255.0 serial 0/0
+
+! Default route (quad-zero) - all traffic not otherwise routed
+ip route 0.0.0.0 0.0.0.0 192.168.1.254</pre>
+        </div>
+
+        <div class="cs-code-variant-label">➤ Switch Configuration</div>
+        <div class="cs-code-block device-switch cs-hidden">
+          <button class="cs-copy-btn" onclick="copyBlock(this)">copy</button>
+          <pre>! Set default gateway for management VLAN
+ip default-gateway 192.168.1.1
+
+! Configure static routes (if needed for advanced routing)
+ip route 10.0.0.0 255.255.0.0 192.168.1.1
+ip route 0.0.0.0 0.0.0.0 192.168.1.1</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. RIP v2 Configuration -->
+    <div class="cs-ref-section" data-section id="ripv2">
+      <div class="cs-ref-section-header">
+        <h2>RIP v2 Configuration</h2>
+        <span class="section-tag">routing protocol</span>
+      </div>
+      <div class="cs-ref-section-body">
+        <p>Enable RIPv2, advertise networks, disable auto-summarization, and silence RIP on external-facing interfaces.</p>
+        
+        <div class="cs-code-variant-label">➤ Router Configuration</div>
+        <div class="cs-code-block device-router">
+          <button class="cs-copy-btn" onclick="copyBlock(this)">copy</button>
+          <pre>router rip
+version 2
+network 10.0.0.0
+network 192.168.0.0
+no auto-summary
+passive-interface serial 0/0
+exit</pre>
+        </div>
+
+        <div class="cs-code-variant-label">➤ Switch Configuration</div>
+        <div class="cs-code-block device-switch cs-hidden">
+          <button class="cs-copy-btn" onclick="copyBlock(this)">copy</button>
+          <pre>! Switches typically do not run RIP
+! RIP is a routing protocol for routers
+! However, if L3 switching is enabled:
+
+router rip
+version 2
+network 192.168.0.0
+no auto-summary
+exit</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. OSPF Configuration -->
+    <div class="cs-ref-section" data-section id="ospf">
+      <div class="cs-ref-section-header">
+        <h2>OSPF Configuration</h2>
+        <span class="section-tag">routing protocol</span>
+      </div>
+      <div class="cs-ref-section-body">
+        <p>Multi-area OSPF setup with router ID, timers, cost tuning, MD5 authentication, and ECMP load balancing.</p>
+        
+        <div class="cs-code-variant-label">➤ Router Configuration</div>
+        <div class="cs-code-block device-router">
+          <button class="cs-copy-btn" onclick="copyBlock(this)">copy</button>
+          <pre>router ospf 10
+router-id 1.1.1.1
+network 10.0.0.0 0.255.255.255 area 0
+network 172.16.8.0 0.0.7.255 area 0
+network 192.168.1.254 0.0.0.0 area 1
+
+! Configure hello/dead timers
+interface gigabitEthernet 0/0/0
+ip ospf hello-interval 2
+ip ospf dead-interval 6
+exit
+
+! Tune OSPF cost
+interface gigabitEthernet 0/0/1
+ip ospf cost 55
+bandwidth 128
+exit
+
+! Auto-cost reference
+router ospf 10
+auto-cost reference-bandwidth 1000
+passive-interface serial 0/0
+
+! MD5 authentication
+ospf authentication message-digest
+interface gigabitEthernet 0/0/0
+ip ospf authentication message-digest
+ip ospf message-digest-key 1 md5 cisco
+exit
+
+! Equal-cost multipath (ECMP)
+router ospf 10
+maximum-paths 6</pre>
+        </div>
+
+        <div class="cs-code-variant-label">➤ Switch Configuration</div>
+        <div class="cs-code-block device-switch cs-hidden">
+          <button class="cs-copy-btn" onclick="copyBlock(this)">copy</button>
+          <pre>! Layer 3 switches with OSPF (advanced)
+
+router ospf 10
+router-id 2.2.2.2
+network 192.168.1.0 0.0.0.255 area 0
+network 192.168.10.0 0.0.0.255 area 0
+
+! Configure on routed ports or SVIs
+interface gigabitEthernet 0/0/2
+no switchport
+ip address 192.168.1.2 255.255.255.0
+ip ospf cost 50
+no shutdown
+exit</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. VLAN Configuration -->
+    <div class="cs-ref-section" data-section id="vlan">
+      <div class="cs-ref-section-header">
+        <h2>VLAN Configuration &amp; Trunking</h2>
+        <span class="section-tag">switching · vlans</span>
+      </div>
+      <div class="cs-ref-section-body">
+        <p>Create VLANs, assign ports to VLANs, and configure trunk ports for inter-switch communication.</p>
+        
+        <div class="cs-code-variant-label">➤ Router Configuration (L3 Switch)</div>
+        <div class="cs-code-block device-router">
+          <button class="cs-copy-btn" onclick="copyBlock(this)">copy</button>
+          <pre>! Create VLANs
+vlan 10
+name Sales
+exit
+
+vlan 20
+name Engineering
+exit
+
+vlan 30
+name Management
+exit
+
+! Assign ports to VLANs
+interface gigabitEthernet 0/0/0
+switchport mode access
+switchport access vlan 10
+exit
+
+interface gigabitEthernet 0/0/1
+switchport mode access
+switchport access vlan 20
+exit
+
+! Configure trunk for inter-switch links
+interface gigabitEthernet 0/0/2
+switchport mode trunk
+switchport trunk allowed vlan 10,20,30
+exit</pre>
+        </div>
+
+        <div class="cs-code-variant-label">➤ Switch Configuration</div>
+        <div class="cs-code-block device-switch cs-hidden">
+          <button class="cs-copy-btn" onclick="copyBlock(this)">copy</button>
+          <pre>! Create VLANs
+vlan 10
+name Sales
+exit
+
+vlan 20
+name Engineering
+exit
+
+vlan 30
+name Management
+exit
+
+! Assign access ports
+interface fastEthernet 0/1
+switchport mode access
+switchport access vlan 10
+exit
+
+interface fastEthernet 0/2
+switchport mode access
+switchport access vlan 20
+exit
+
+! Configure voice VLAN
+interface fastEthernet 0/5
+switchport mode access
+switchport access vlan 10
+switchport voice vlan 12
+exit
+
+! Configure trunk port
+interface gigabitEthernet 0/1
+switchport mode trunk
+switchport trunk allowed vlan 10,20,30
+exit</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Inter-VLAN Routing -->
+    <div class="cs-ref-section" data-section id="intervlan">
+      <div class="cs-ref-section-header">
+        <h2>Inter-VLAN Routing (Router-on-a-Stick)</h2>
+        <span class="section-tag">routing · vlans</span>
+      </div>
+      <div class="cs-ref-section-body">
+        <p>Create sub-interfaces on a single physical port using 802.1Q encapsulation to route between VLANs.</p>
+        
+        <div class="cs-code-variant-label">➤ Router Configuration</div>
+        <div class="cs-code-block device-router">
+          <button class="cs-copy-btn" onclick="copyBlock(this)">copy</button>
+          <pre>! Enable the physical interface first
+interface gigabitEthernet 0/0/2
+no shutdown
+exit
+
+! Create subinterfaces for each VLAN
+interface gigabitEthernet 0/0/2.10
+encapsulation dot1Q 10
+ip address 192.168.10.1 255.255.255.0
+exit
+
+interface gigabitEthernet 0/0/2.20
+encapsulation dot1Q 20
+ip address 192.168.20.1 255.255.255.0
+exit
+
+interface gigabitEthernet 0/0/2.30
+encapsulation dot1Q 30
+ip address 192.168.30.1 255.255.255.0
+exit</pre>
+        </div>
+
+        <div class="cs-code-variant-label">➤ Switch Configuration (L3 with SVIs)</div>
+        <div class="cs-code-block device-switch cs-hidden">
+          <button class="cs-copy-btn" onclick="copyBlock(this)">copy</button>
+          <pre>! Create VLANs and SVI (Switch Virtual Interface)
+vlan 10
+exit
+vlan 20
+exit
+vlan 30
+exit
+
+! Configure SVIs for inter-VLAN routing
+interface vlan 10
+ip address 192.168.10.1 255.255.255.0
+no shutdown
+exit
+
+interface vlan 20
+ip address 192.168.20.1 255.255.255.0
+no shutdown
+exit
+
+interface vlan 30
+ip address 192.168.30.1 255.255.255.0
+no shutdown
+exit
+
+! Enable routing on switch
+ip routing</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. SSH & Management Security -->
+    <div class="cs-ref-section" data-section id="ssh">
+      <div class="cs-ref-section-header">
+        <h2>SSH &amp; Management Security</h2>
+        <span class="section-tag">security · management</span>
+      </div>
+      <div class="cs-ref-section-body">
+        <p>Configure SSH v2, local authentication, disable Telnet, and set up secure management access.</p>
+        
+        <div class="cs-code-variant-label">➤ Router Configuration</div>
+        <div class="cs-code-block device-router">
+          <button class="cs-copy-btn" onclick="copyBlock(this)">copy</button>
+          <pre>! Configure domain name (required for SSH key generation)
+ip domain-name example.com
+
+! Generate RSA encryption keys
+crypto key generate rsa modulus 2048
+
+! Enable SSH version 2
+ip ssh version 2
+
+! Create local user account with privilege level
+username admin privilege 15 secret MyAdminPassword
+
+! Configure VTY lines for SSH only
+line vty 0 4
+login local
+transport input ssh
+exit
+
+! Save running config to startup config
+copy running-config startup-config</pre>
+        </div>
+
+        <div class="cs-code-variant-label">➤ Switch Configuration</div>
+        <div class="cs-code-block device-switch cs-hidden">
+          <button class="cs-copy-btn" onclick="copyBlock(this)">copy</button>
+          <pre>! Configure domain name (required for SSH key generation)
+ip domain-name example.com
+
+! Generate RSA encryption keys
+crypto key generate rsa modulus 2048
+
+! Enable SSH version 2
+ip ssh version 2
+
+! Create local user account with privilege level
+username admin privilege 15 secret MyAdminPassword
+
+! Configure VTY lines for SSH only (0-15 for switches)
+line vty 0 15
+login local
+transport input ssh
+exit
+
+! Save running config to startup config
+copy running-config startup-config</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. Device Management -->
+    <div class="cs-ref-section" data-section id="management">
+      <div class="cs-ref-section-header">
+        <h2>Device Management Configuration</h2>
+        <span class="section-tag">management</span>
+      </div>
+      <div class="cs-ref-section-body">
+        <p>Configure management IP, default gateway, and complete device security hardening.</p>
+        
+        <div class="cs-code-variant-label">➤ Router Configuration</div>
+        <div class="cs-code-block device-router">
+          <button class="cs-copy-btn" onclick="copyBlock(this)">copy</button>
+          <pre>! Configure loopback for management
+interface loopback 0
+ip address 192.168.100.1 255.255.255.255
+exit
+
+! Configure management access
+line console 0
+password ConsolePassword
+login
+exit
+
+line vty 0 4
+password VTYPassword
+login local
+transport input ssh
+exit
+
+! Configure SNMP for management
+snmp-server community public RO
+snmp-server community private RW
+
+! Configure Syslog
+logging host 192.168.100.50
+logging trap informational
+
+! Save all configurations
+copy running-config startup-config</pre>
+        </div>
+
+        <div class="cs-code-variant-label">➤ Switch Configuration</div>
+        <div class="cs-code-block device-switch cs-hidden">
+          <button class="cs-copy-btn" onclick="copyBlock(this)">copy</button>
+          <pre>! Configure management VLAN interface
+interface vlan 1
+ip address 192.168.1.2 255.255.255.0
+no shutdown
+exit
+
+! Set default gateway for management
+ip default-gateway 192.168.1.1
+
+! Configure management access
+line console 0
+password ConsolePassword
+login
+exit
+
+line vty 0 15
+password VTYPassword
+login local
+transport input ssh
+exit
+
+! Configure SNMP
+snmp-server community public RO
+snmp-server community private RW
+
+! Configure Syslog
+logging host 192.168.100.50
+logging trap informational
+
+! Save all configurations
+copy running-config startup-config</pre>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  <p>&copy; 2026 Mark Andrew Wanjau | Built by Makbuilt Solutions</p>
+</footer>
+
+<script>
+  // ── Matrix Background Animation ──
+  const canvas = document.getElementById("matrix-canvas");
+  const ctx = canvas.getContext("2d");
+
+  function setupCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    letters = "01";
+    fontSize = 16;
+    columns = Math.floor(canvas.width / fontSize);
+    drops = Array(columns).fill(1);
+  }
+
+  let letters, fontSize, columns, drops;
+  setupCanvas();
+
+  function drawMatrix() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#0f0";
+    ctx.font = fontSize + "px monospace";
+
+    const contentWidth = 900;
+    const gutter = (canvas.width - contentWidth) / 2;
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = letters[Math.floor(Math.random() * letters.length)];
+      const x = i * fontSize;
+      const y = drops[i] * fontSize;
+
+      if (x < gutter || x > gutter + contentWidth) {
+        ctx.fillText(text, x, y);
+      }
+
+      if (y > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+
+      drops[i]++;
+    }
+  }
+
+  setInterval(drawMatrix, 33);
+  window.addEventListener("resize", setupCanvas);
+
+  // ── Sidebar Navigation Toggle ──
+  function toggleGroup(el) {
+    el.classList.toggle('open');
+    el.nextElementSibling.classList.toggle('open');
+  }
+
+  // ── Device Toggle (Router / Switch) ──
+  function switchDevice(type) {
+    const routerBlocks = document.querySelectorAll('.device-router');
+    const switchBlocks = document.querySelectorAll('.device-switch');
+    const buttons = document.querySelectorAll('.cs-device-btn');
+
+    buttons.forEach(btn => btn.classList.remove('active'));
+
+    if (type === 'router') {
+      routerBlocks.forEach(block => block.classList.remove('cs-hidden'));
+      switchBlocks.forEach(block => block.classList.add('cs-hidden'));
+      buttons[0].classList.add('active');
+    } else {
+      routerBlocks.forEach(block => block.classList.add('cs-hidden'));
+      switchBlocks.forEach(block => block.classList.remove('cs-hidden'));
+      buttons[1].classList.add('active');
+    }
+  }
+
+  // ── Category Dropdown Toggle ──
+  function toggleDropdown() {
+    const dropdown = document.getElementById('dropdownContent');
+    dropdown.classList.toggle('open');
+  }
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(e) {
+    const dropdown = document.getElementById('dropdownContent');
+    const btn = document.querySelector('.cs-dropdown-btn');
+    if (!e.target.closest('.cs-category-dropdown')) {
+      dropdown.classList.remove('open');
+    }
+  });
+
+  // ── Jump to Section ──
+  function jumpToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('dropdownContent').classList.remove('open');
+    }
+  }
+
+  // ── Copy to Clipboard ──
+  function copyBlock(btn) {
+    const code = btn.nextElementSibling.innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      btn.textContent = 'copied ✓';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  // ── Search/Filter Sections ──
+  function filterSections() {
+    const q = document.getElementById('cs-search').value.toLowerCase();
+    document.querySelectorAll('[data-section]').forEach(sec => {
+      sec.style.display = sec.innerText.toLowerCase().includes(q) ? '' : 'none';
+    });
+  }
+</script>
+</body>
+</html>

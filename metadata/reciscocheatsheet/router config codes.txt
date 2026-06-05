@@ -1,0 +1,55 @@
+enable
+configure terminal
+hostname MyRouter
+
+! Set enable secret
+enable secret MyEnablePassword
+
+! Configure console access
+line console 0
+password MyConsolePassword
+login
+exit
+
+! Configure VTY access
+line vty 0 4
+password MyVTYPassword
+login
+exit
+
+! Configure a banner
+banner motd #Unauthorized access is prohibited#
+
+! Configure interfaces
+interface gigabitEthernet 0/0/0
+description Link to ISP
+ip address 192.168.1.1 255.255.255.0
+no shutdown
+exit
+
+interface gigabitEthernet 0/0/1
+description Internal Network
+ip address 192.168.2.1 255.255.255.0
+no shutdown
+exit
+
+! Configure static route
+ip route 0.0.0.0 0.0.0.0 192.168.1.254
+
+! Configure management interface
+interface loopback 0
+ip address 192.168.100.1 255.255.255.255
+exit
+
+! Configure SSH access
+ip domain-name example.com
+crypto key generate rsa modulus 2048
+ip ssh version 2
+username admin privilege 15 secret MyAdminPassword
+line vty 0 4
+transport input ssh
+login local
+exit
+
+! Save configuration
+copy running-config startup-config
